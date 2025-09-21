@@ -53,15 +53,10 @@ class QuizViewModel extends ChangeNotifier {
     } catch (e) {
       _error = e;                                    // Fehler merken
       _setState(QuizState.initial);                     // zurück in stabilen Zustand (oder eigener error-State)
-      // WICHTIG: Store NICHT anfassen -> bleibt 0/0/0
     }
   }
 
-  // Antwortet auf die aktuelle Frage:
-  // - Nur im Zustand 'question' aktiv (No-Op-Guards)
-  // - Scoring über Domain-Regel (Question.isCorrect)
-  // - Fortschritt ausschließlich über den Store fortschreiben
-  // - Zustand anhand des Fortschritts umschalten (question -> finished)
+
   void answerQuestion(String answer) {
     if (_state != QuizState.question) return;        // Guard: nur im Frage-Modus
     final q = currentQuestion;
@@ -69,10 +64,7 @@ class QuizViewModel extends ChangeNotifier {
 
     final correct = q.isCorrect(answer);             // Fachregel in Domain
     store.advance(correct: correct);                 // Fortschritt im Store erhöhen
-    // HINWEIS: Der Store sollte intern "clampen" (current nicht > total).
-    // Siehe QuizSessionStore.advance(): if (p.current >= p.total) return;
-
-    // Zustand aktualisieren: bei letzter Frage -> finished
+   
     _setState(
       currentIndex >= _questions.length
         ? QuizState.finished
@@ -80,18 +72,15 @@ class QuizViewModel extends ChangeNotifier {
     );
   }
 
-  // Neustart:
-  // - Setzt lokalen Fehler/Fagenliste zurück
-  // - Lädt erneut über startQuiz()
+  
   Future<void> retry() async {
     _questions = const [];
     _error = null;
     await startQuiz();
   }
 
-  // --- intern: einheitliches State-Set + Benachrichtigung ---
   void _setState(QuizState s) {
     _state = s;
-    notifyListeners();                               // Views reagieren via AnimatedBuilder/Listenables
+    notifyListeners();
   }
 }

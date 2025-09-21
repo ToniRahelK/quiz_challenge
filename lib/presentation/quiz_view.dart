@@ -15,7 +15,7 @@ class _QuizViewState extends State<QuizView> {
   @override
   void initState() {
     super.initState();
-    widget.viewModel.startQuiz(); // Start im Lifecycle
+    widget.viewModel.startQuiz();
   }
 
   @override
@@ -55,7 +55,7 @@ class _QuizViewState extends State<QuizView> {
             ],
           );
         }
-        // idle + optionaler Fehlerpfad
+        // initial + optionaler Fehlerpfad
         return Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [

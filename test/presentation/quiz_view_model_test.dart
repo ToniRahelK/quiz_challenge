@@ -74,7 +74,7 @@ void main() {
       expect(vm.state, QuizState.question);
       expectProgress(store, current: 0, total: 2, score: 0);
 
-      // Erste Frage kohärent zum Index 0
+      
       expect(vm.currentQuestion!.text, '2+2?');
     });
 
@@ -108,37 +108,31 @@ void main() {
       );
 
       await vm.startQuiz();
-      vm.answerQuestion('4'); // eine richtig
+      vm.answerQuestion('4'); 
       expectProgress(store, current: 1, total: 2, score: 1);
 
       await vm.retry();
 
-      // Nach retry: wieder geladen, question-State, Fortschritt zurückgesetzt
       expect(vm.state, QuizState.question);
       expectProgress(store, current: 0, total: 2, score: 0);
       expect(vm.currentQuestion, isNotNull);
     });
 
     test('Loading-Guard: zweiter startQuiz-Aufruf während loading hat keine Nebenwirkung', () async {
-      // Arrange: Use-Case liefert erst, wenn completer erfüllt wird
       final completer = Completer<List<Question>>();
       final repo = TestQuizRepository(() => completer.future);
       final vm = QuizViewModel(startQuizUc: StartQuiz(repo), store: store);
 
-      // 1. Start → loading
       final f1 = vm.startQuiz();
       expect(vm.state, QuizState.loading);
 
-      // 2. Start während loading → darf nichts tun / nicht crashen
       final f2 = vm.startQuiz();
       expect(vm.state, QuizState.loading);
-      await f2; // sollte sauber zurückkehren
+      await f2; 
 
-      // Ladevorgang beenden
       completer.complete(sampleQuestions());
       await f1;
 
-      // Ergebnis: normaler Übergang nach question, Progress reset
       expect(vm.state, QuizState.question);
       expectProgress(store, current: 0, total: 2, score: 0);
     });
@@ -161,11 +155,11 @@ void main() {
 
       await vm.startQuiz();
 
-      expect(vm.state, QuizState.finished);        // Design-Entscheidung Option A
+      expect(vm.state, QuizState.finished);    
       expectProgress(store, current: 0, total: 0, score: 0);
       expect(vm.currentQuestion, isNull);
 
-      // No-Op: Antworten im finished-State haben keine Wirkung
+      // Antworten im finished-State haben keine Wirkung
       vm.answerQuestion('egal');
       expect(vm.state, QuizState.finished);
       expectProgress(store, current: 0, total: 0, score: 0);
@@ -187,12 +181,12 @@ void main() {
         startQuizUc: StartQuiz(TestQuizRepository(() => completer.future)),
         store: QuizSessionStore(), // frischer Store
       );
-      vm2.startQuiz(); // -> loading
+      vm2.startQuiz(); 
       expect(vm2.state, QuizState.loading);
-      vm2.answerQuestion('egal'); // No-Op im loading
+      vm2.answerQuestion('egal'); 
       expect(vm2.state, QuizState.loading);
       completer.complete(sampleQuestions());
-      await Future.microtask(() {}); // event loop tick
+      await Future.microtask(() {}); 
     });
 
     test('Kohärenz: currentQuestion passt immer zum current-Index im Store', () async {

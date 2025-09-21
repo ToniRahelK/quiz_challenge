@@ -16,7 +16,7 @@ class QuizSessionStore {
 
   void advance({required bool correct}) {
     final p = progress.value;
-    if (p.current >= p.total) return;                  // Clamp: nie über das Ende hinaus
+    if (p.current >= p.total) return; 
     progress.value = Progress(
       current: p.current + 1,
       total: p.total,
