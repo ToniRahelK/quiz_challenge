@@ -6,4 +6,5 @@ Cross-ViewModel-State via Application-Store (`QuizSessionStore`).
 ## Start
 ```bash
 flutter pub get
-flutter run -d chrome
+flutter run 
+flutter test
