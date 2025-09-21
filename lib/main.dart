@@ -18,6 +18,7 @@ class MyApp extends StatelessWidget {
   final _repo = FakeQuizRepository();
 
   // Application
+  final _session = QuizSessionStore();             
   late final _startQuiz = StartQuiz(_repo);
 
   // Presentation Logic
